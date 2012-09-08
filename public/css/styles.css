@@ -1,0 +1,48 @@
+div#messages {
+  height: 1em; 
+  margin-bottom: 2px;
+  z-index: 100;
+  background: #ffffff;
+}
+div#messages .error {color: red; font-weight: bold;}
+div#messages .notice {}
+div#messages .info {color: #333; font-style: italic;}
+
+div#map_canvas {
+  height: 480px; 
+  width: 100%; 
+  background: #ddd;
+  top:0px;
+  z-index: 0;
+}
+
+.navbar-fixed-top {
+    margin-bottom: 0px;
+}
+/* some navbar over-writing here */
+.nav-bar-inner-spacer {
+}
+.navbar-inner {
+  background-color: #eeeeee;
+  background: url("../images/texture.png") repeat scroll 0 0 transparent;
+  background-image: -moz-linear-gradient(top, #eeeeee, #eaeaea);
+  background-image: -ms-linear-gradient(top, #eeeeee, #eaeaea);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#eeeeee), to(#eaeaea));
+  background-image: -webkit-linear-gradient(top, #eeeeee, #eaeaea);
+  background-image: -o-linear-gradient(top, #eeeeee, #eaeaea);
+  background-image: linear-gradient(top, #eeeeee, #eaeaea);
+  border-bottom: 2px #468200 solid;
+  background-repeat: repeat-x;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.tagline {
+    display: inline;
+    vertical-align: middle;
+  }
