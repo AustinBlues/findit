@@ -1,55 +1,66 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Find It Nearby</title>
+<title>Cycle Nearby</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="description" content="Web-based mobile application to find Austin, TX city features, such as libraries and voting places, nearest to you. Free and non-commercial. Powered by open government data." />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<style type="text/css">
-
-body {font-size: 10pt; margin: 0; padding: 2px; font-family: sans-serif;}
-
-div#messages {height: 1em; margin-bottom: 2px;}
-div#messages .error {color: red; font-weight: bold;}
-div#messages .notice {color: blue;}
-div#messages .info {color: #333; font-style: italic;}
-
-div#map_canvas {height: 480px; width: 100%; background: #ddd;}
-
-form#controls {position: relative; width: 100%; height: 1.5em;}
-
-a#about_link {
-  display: block;
-  position: absolute;  
-  top: 0;
-  right: 0;
-  color: black;
-  font-size: 8pt;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-a#about_link:hover {
-  background: #e8e8e8;
-}
-
-input#address_field {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 2px;
-  right: 5em;
-  border: solid black 1px;
-  /* color and font-style will be updated on first click */
-  color: #666;
-  font-style: italic;
-}
-
-</style>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=&sensor=true"></script>
 <script type="text/javascript" src="findit.js?v=2012071001"></script>
-<script type="text/javascript">
+
+  <script src="js/libs/modernizr-2.5.3.min.js"></script>
+<!-- set the viewport scale to 1 -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/bootstrap-responsive.css">
+</head>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+          <li>
+            <a class="brand" href="#">
+                <img src="images/cyclenearby.png" width="250px">
+                <div class="tagline">local biking data</div>
+            </a>
+          </li>
+        </ul>
+        <ul class="nav">
+          <li>
+            <form class="navbar-search pull-left" id="controls" action="#" onsubmit="findit.displayMapAtAddress(this.address_field.value); return false;">
+              <input type="text" class="search-query" id="address_field" value="enter an address here" onclick="removePrompt(this)" />
+            </form>
+          </li>
+          <li>
+           <a href="routes.html">Austin Bike Routes</a>
+          </li>
+          <li>
+           <a href="index.html">Stuff Nearby</a>
+          </li>
+          <li>
+           <a id="about_link" href="about.html">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<body onload="startFindIt()">
+<div id="messages">
+</div>
+
+<!-- color-coded bike route iframe -->
+<!--<iframe width=100% height="800px" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?viz=MAP&amp;q=select+col0%3E%3E0+from+18X0651RBFskSi1j3GfWqNiWxhnbex7FnIj4sTWI&amp;h=false&amp;lat=30.322372779344352&amp;lng=-97.74722282594996&amp;z=11&amp;t=1&amp;l=col0%3E%3E0"></iframe>-->
+<!-- other map -->
+<div id="map_canvas"></div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/script.js"></script>
+  <script type="text/javascript">
 
   var current_event_level = 0;
   
@@ -119,13 +130,5 @@ input#address_field {
   }
 
 </script>
-</head>
-<body onload="startFindIt()">
-<div id="messages"></div>
-<div id="map_canvas"></div>
-<form id="controls" action="#" onsubmit="findit.displayMapAtAddress(this.address_field.value); return false;">
-<a id="about_link" href="about.html">About</a>
-<input type="text" id="address_field" value="enter an address here" onclick="removePrompt(this)" />
-</form>
 </body>
 </html>
