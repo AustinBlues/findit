@@ -67,16 +67,16 @@ module FindIt
       @max_distance = options[:max_distance] || MAX_DISTANCE
       
       # DBI connection to the PostGIS "findit" database.
-      @db = DBI.connect(@db_uri, @db_user, @db_password)
+#      @db = DBI.connect(@db_uri, @db_user, @db_password)
       
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
-        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
-        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
-        FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
+#        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
+#        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
+#        FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
         FindIt::Feature::Austin_CI_TX_US::FireStation, 
         FindIt::Feature::Austin_CI_TX_US::PoliceStation,
-        FindIt::Feature::Travis_CO_TX_US::VotingPlaceFactory.create(@db, "20120731"),
+#        FindIt::Feature::Travis_CO_TX_US::VotingPlaceFactory.create(@db, "20120731"),
       ]  
       
     end
