@@ -3,8 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-load "./bin/findit-svc"
-run Sinatra::Application
-
-#require './my_sinatra_app'
-#run MySinatraApp
+require './cycle_nearby'
+run CycleNearby
