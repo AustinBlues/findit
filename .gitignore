@@ -2,3 +2,4 @@
 .project
 rdoc
 .bundle
+cycle_nearby.db

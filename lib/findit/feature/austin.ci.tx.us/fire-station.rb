@@ -38,7 +38,7 @@ module FindIt
             :state => m[2],
             :zip => m[3],
             :location => FindIt::Location.new(lat, lng, :DEG),
-          }         
+          }
         end # load_csv_data_set_with_location
         
       
