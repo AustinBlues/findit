@@ -1,7 +1,8 @@
 require 'findit'
-require 'dbi'
-require 'sqlite3'
-require 'dbd/SQLite3'
+#require 'dbi'
+#require 'sqlite3'
+#require 'dbd/SQLite3'
+require 'rdbi-driver-sqlite3'
 
 # Include all of the local features that we want to support.
 require 'findit/feature/austin.ci.tx.us/fire-station'
@@ -76,8 +77,11 @@ module FindIt
 #      @db = DBI.connect(@db_uri, @db_user, @db_password)
       
       # DBI connection to the SQLite3 "cycle_nearby" database.
-      @db = DBI.connect(@db_uri, @db_user, @db_password)
-      
+#      @db = DBI.connect(@db_uri)
+
+      # RDBI connection to SQLite3 "cycle_nearby" database.
+      @db = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
+
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
 #        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),

@@ -51,7 +51,7 @@ module FindIt
             LIMIT 1
             }, origin.lng, origin.lat, @rectype)
 	  end
-          rec = sth.fetch
+          rec = sth.fetch[0]	  # FIXME: only using first of potentially many
           sth.finish
 
           return nil unless rec  
