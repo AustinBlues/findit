@@ -16,7 +16,7 @@ module FindIt
             klass.instance_variable_set(:@marker, FindIt::Asset::MapMarker.new(
               'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
               :shadow => 'icon33s.png'))
-            klass.instance_variable_set(:@title, 'Closest bicycle theft')
+            klass.instance_variable_set(:@title, 'Latest bicycle theft')
             klass.instance_variable_set(:@rectype, 'THEFT OF BICYCLE')            
             
           else
