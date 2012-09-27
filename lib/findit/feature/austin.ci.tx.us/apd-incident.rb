@@ -31,15 +31,14 @@ module FindIt
       
       
       class AbstractIncident < FindIt::BaseFeature
-        
         @db = nil
         @title = nil
         @rectype = nil
                          
-
         def self.closest(origin)
 	  if true
-	    sth = @db.execute('SELECT * FROM austin_ci_tx_us_apd_incident LIMIT 1')
+	    # Only the latest bike theft - arbitrary, but should change daily.
+	    sth = @db.execute('SELECT * FROM austin_ci_tx_us_apd_incident ORDER BY date DESC LIMIT 1')
 	  else
 	    sth = @db.execute(%q{SELECT *,
             ST_X(ST_Transform(the_geom, 4326)) AS longitude,

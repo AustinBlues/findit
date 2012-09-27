@@ -1,12 +1,26 @@
+PATH
+  remote: ~/Rails/socrata-ruby
+  specs:
+    socrata (0.2.2)
+      curb (>= 0.5.4.0)
+      httparty (>= 0.4.3)
+      json (>= 1.1.6)
+
 GEM
   remote: http://rubygems.org/
   remote: http://gems.github.com/
   specs:
+    curb (0.8.1)
     daemons (1.1.9)
     epoxy (0.3.1)
     eventmachine (1.0.0)
+    httparty (0.8.3)
+      multi_json (~> 1.0)
+      multi_xml
     json (1.7.5)
     methlab (0.1.0)
+    multi_json (1.3.6)
+    multi_xml (0.5.1)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -41,5 +55,6 @@ DEPENDENCIES
   rdbi
   rdbi-driver-sqlite3
   sinatra
+  socrata (~> 0.2.0)!
   sqlite3-ruby
   thin
