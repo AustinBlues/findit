@@ -73,29 +73,29 @@ tob = view.filter(:filterCondition => {:type => 'operator',
 
 total_records = 0
 new_records = 0
-tob.each do |row|
-  if row[apd_position['LATITUDE']] && row[apd_position['LONGITUDE']]
-    sql = 'SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?'
-    result = dbh.execute(sql, row[apd_position['Incident Report Number']])
-    if result.fetch[0].empty?
-      values = Array.new(APD2DB_MAP.size)
-      APD2DB_MAP.each do |apd, cn|
-	value = row[apd_position[apd]]
-	values[cn_position[cn]] = case apd_data_type[apd]
-				  when 'text'
-				    "'#{value}'"
-				  when 'date'
-				    "'#{Time.at(value).strftime('%Y-%m-%d')}'"
-				  else
-				    value
-				  end
-      end
+dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |sth|
+  tob.each do |row|
+    if row[apd_position['LATITUDE']] && row[apd_position['LONGITUDE']]
+      result = sth.execute(row[apd_position['Incident Report Number']])
+      if result.fetch[0].empty?
+	values = Array.new(APD2DB_MAP.size)
+	APD2DB_MAP.each do |apd, cn|
+	  value = row[apd_position[apd]]
+	  values[cn_position[cn]] = case apd_data_type[apd]
+				    when 'text'
+				      "'#{value}'"
+				    when 'date'
+				      "'#{Time.at(value).strftime('%Y-%m-%d')}'"
+				    else
+				      value
+				    end
+	end
 
-      sql = "INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})"
-      result = dbh.execute(sql)
-      new_records += 1
+	dbh.execute("INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})")
+	new_records += 1
+      end
+      total_records += 1
     end
-    total_records += 1
   end
 end
 puts "#{new_records} new records out of #{total_records} total."
