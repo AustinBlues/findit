@@ -24,10 +24,52 @@ APD2DB_MAP = {
   'ADDRESS' => 'address'
 }
 
-api = Socrata.new(:base_uri => APD_INCIDENT)
-view = api.view(ID)
+
+# Convert from Socrata formatting to SQL VALUES formatting
+def socrata2sql(value, data_type)
+  case data_type
+  when 'text'
+    "'#{value}'"
+  when 'date'
+    "'#{Time.at(value).strftime('%Y-%m-%d')}'"
+  else
+    value
+  end
+end
+
+
+# Only rows with 'THEFT OF BICYCLE' Crime Type in the last month
+def theft_of_bicycle(view)
+  crime_type_id = view.columns.find{|c| c['name'] == 'Crime Type'}['id']
+  date_id = view.columns.find{|c| c['name'] == 'Date'}['id']
+
+  view.filter(:filterCondition => {:type => 'operator',
+		:value => 'AND',
+		:children => [
+		  {:type => 'operator',
+		    :value => 'EQUALS',
+		    :children => [
+		      {:columnId =>  crime_type_id, :type => 'column'},
+		      {:type => 'literal', :value => 'THEFT OF BICYCLE'}
+		    ]
+		  },
+		  {:type => 'operator',
+		    :value => 'GREATER_THAN_OR_EQUALS',
+		    :children => [
+		      {:columnId => date_id, :type => 'column'},
+		      {:type => 'literal',
+			:value => Time.now.to_i - ONE_MONTH
+		      }
+		    ]
+		  }
+		]
+	      }
+  )
+end
+
 
 # APD Socrata mapping
+view = Socrata.new(:base_uri => APD_INCIDENT).view(ID)
 apd_position = {}	# Column Name to position map
 apd_data_type = {}	# Column Name to data type map
 view.columns.each do |col|
@@ -44,53 +86,17 @@ columns.each_with_index do |col, i|
   cn_position[col.name.to_s] = i
 end
 
-# Only rows with 'THEFT OF BICYCLE' Crime Type in the last month
-crime_type_id = view.columns.find{|c| c['name'] == 'Crime Type'}['id']
-date_id = view.columns.find{|c| c['name'] == 'Date'}['id']
-
-tob = view.filter(:filterCondition => {:type => 'operator',
-		    :value => 'AND',
-		    :children => [
-		      {:type => 'operator',
-			:value => 'EQUALS',
-			:children => [
-			  {:columnId =>  crime_type_id, :type => 'column'},
-			  {:type => 'literal', :value => 'THEFT OF BICYCLE'}
-			]
-		      },
-		      {:type => 'operator',
-			:value => 'GREATER_THAN_OR_EQUALS',
-			:children => [
-			  {:columnId => date_id, :type => 'column'},
-			  {:type => 'literal',
-			    :value => Time.now.to_i - ONE_MONTH
-			  }
-			]
-		      }
-		    ]
-		  }
-		  )
-
 total_records = 0
 new_records = 0
 dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |sth|
-  tob.each do |row|
+  theft_of_bicycle(view).each do |row|
     if row[apd_position['LATITUDE']] && row[apd_position['LONGITUDE']]
       result = sth.execute(row[apd_position['Incident Report Number']])
       if result.fetch[0].empty?
 	values = Array.new(APD2DB_MAP.size)
 	APD2DB_MAP.each do |apd, cn|
-	  value = row[apd_position[apd]]
-	  values[cn_position[cn]] = case apd_data_type[apd]
-				    when 'text'
-				      "'#{value}'"
-				    when 'date'
-				      "'#{Time.at(value).strftime('%Y-%m-%d')}'"
-				    else
-				      value
-				    end
+	  values[cn_position[cn]] = socrata2sql(row[apd_position[apd]], apd_data_type[apd])
 	end
-
 	dbh.execute("INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})")
 	new_records += 1
       end
@@ -98,5 +104,7 @@ dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |st
     end
   end
 end
+
 puts "#{new_records} new records out of #{total_records} total."
+
 dbh.disconnect
