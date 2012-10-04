@@ -36,7 +36,7 @@ module FindIt
         @rectype = nil
                          
         def self.closest(origin)
-	  if true
+	  if false
 	    # Only the latest bike theft - arbitrary, but should change daily.
             if false
               fields = 'uid, crime_type, latitude, longitude, date, time, address'
@@ -46,15 +46,31 @@ module FindIt
             sql = "SELECT #{fields} FROM austin_ci_tx_us_apd_incident ORDER BY date DESC LIMIT 1"
 	    sth = @db.execute(sql)
 	  else
-	    sth = @db.execute(%q{SELECT *,
-            ST_X(ST_Transform(the_geom, 4326)) AS longitude,
-            ST_Y(ST_Transform(the_geom, 4326)) AS latitude,
-            ST_Distance(ST_Transform(the_geom, 4326), ST_SetSRID(ST_Point(?, ?), 4326)) AS distance
-            FROM austin_ci_tx_us_incident
-            WHERE building_n = ?
+            puts "LONG: #{origin.lng}, LAT: #{origin.lat}."
+            begin
+              if true
+                sql = %Q{SELECT *,
+            Distance(geometry, PointFromText('POINT(#{origin.lat} #{origin.lng})', 4326)) AS distance
+            FROM austin_ci_tx_us_apd_incident
             ORDER BY distance ASC
             LIMIT 1
-            }, origin.lng, origin.lat, @rectype)
+            }
+                puts "SQL: #{sql};"
+                sth = @db.execute(sql)
+              else
+                sth = @db.execute(%q{SELECT *,
+            X(Transform(geometry, 4326)) AS longitude,
+            Y(Transform(geometry, 4326)) AS latitude,
+            Distance(Transform(geometry, 4326), GeomFromText('POINT(? ?)', 4326)) AS distance
+            FROM austin_ci_tx_us_apd_incident
+            ORDER BY distance ASC
+            LIMIT 1
+            }, origin.lat.to_s, origin.lng.to_s)
+              end
+            rescue
+#              puts "SQL: #{@db.last_statement.query};"
+              puts "EXCEPTION(#{__FILE__}: #{__LINE__}): #{$!}."
+            end
 	  end
           rec = sth.fetch[0]	  # FIXME: only using first of potentially many
           sth.finish
