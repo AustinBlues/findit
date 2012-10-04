@@ -80,6 +80,9 @@ end
 
 # Cycle Nearby (CN) SQLite3 database column to position mapping
 dbh = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
+# Load spatialite extension
+dbh.handle.enable_load_extension(true)
+dbh.handle.load_extension('/usr/lib64/libspatialite.so')
 cn_position = {}
 columns = dbh.table_schema('austin_ci_tx_us_apd_incident').columns
 columns.each_with_index do |col, i|
@@ -90,14 +93,19 @@ total_records = 0
 new_records = 0
 dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |sth|
   theft_of_bicycle(view).each do |row|
-    if row[apd_position['LATITUDE']] && row[apd_position['LONGITUDE']]
+    latitude = row[apd_position['LATITUDE']]
+    longitude = row[apd_position['LONGITUDE']]
+    if latitude && longitude
       result = sth.execute(row[apd_position['Incident Report Number']])
       if result.fetch[0].empty?
-	values = Array.new(APD2DB_MAP.size)
+	values = Array.new(APD2DB_MAP.size+1)
 	APD2DB_MAP.each do |apd, cn|
 	  values[cn_position[cn]] = socrata2sql(row[apd_position[apd]], apd_data_type[apd])
 	end
-	dbh.execute("INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})")
+        values[-1] = "GeomFromText('POINT(#{longitude} #{latitude})', 4326)"
+        sql = "INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})"
+        puts "SQL: #{sql};"
+        dbh.execute(sql)
 	new_records += 1
       end
       total_records += 1

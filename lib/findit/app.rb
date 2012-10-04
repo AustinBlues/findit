@@ -1,16 +1,13 @@
 require 'findit'
-#require 'dbi'
-#require 'sqlite3'
-#require 'dbd/SQLite3'
 require 'rdbi-driver-sqlite3'
 
 # Include all of the local features that we want to support.
 require 'findit/feature/austin.ci.tx.us/fire-station'
 require 'findit/feature/austin.ci.tx.us/facility'
-require 'findit/feature/austin.ci.tx.us/historical'
+#require 'findit/feature/austin.ci.tx.us/historical'
 require 'findit/feature/austin.ci.tx.us/police-station'
 require 'findit/feature/austin.ci.tx.us/apd-incident'
-require 'findit/feature/travis.co.tx.us/voting-place'
+#require 'findit/feature/travis.co.tx.us/voting-place'
 
 
 module FindIt
@@ -52,7 +49,7 @@ module FindIt
     #
     # Default value used when constructing a new FindIt::App instance.
     #
-    MAX_DISTANCE = 12    
+    MAX_DISTANCE = 20
 
     # Construct a new FindIt app instance.
     #
@@ -80,7 +77,17 @@ module FindIt
 #      @db = DBI.connect(@db_uri)
 
       # RDBI connection to SQLite3 "cycle_nearby" database.
-      @db = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
+      @db = nil	# force scope
+      res = nil	# force scope
+      begin
+        @db = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
+        @db.handle.enable_load_extension(true)
+        @db.handle.load_extension('/usr/lib64/libspatialite.so')
+      rescue
+        puts "EXCEPTION: #{$!}."
+      ensure
+        puts "RESULT: #{res.inspect}."
+      end
 
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [

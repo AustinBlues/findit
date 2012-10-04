@@ -38,7 +38,13 @@ module FindIt
         def self.closest(origin)
 	  if true
 	    # Only the latest bike theft - arbitrary, but should change daily.
-	    sth = @db.execute('SELECT * FROM austin_ci_tx_us_apd_incident ORDER BY date DESC LIMIT 1')
+            if false
+              fields = 'uid, crime_type, latitude, longitude, date, time, address'
+            else
+              fields = '*'
+            end
+            sql = "SELECT #{fields} FROM austin_ci_tx_us_apd_incident ORDER BY date DESC LIMIT 1"
+	    sth = @db.execute(sql)
 	  else
 	    sth = @db.execute(%q{SELECT *,
             ST_X(ST_Transform(the_geom, 4326)) AS longitude,
@@ -53,6 +59,8 @@ module FindIt
           rec = sth.fetch[0]	  # FIXME: only using first of potentially many
           sth.finish
 
+          puts "REC: #{rec.inspect}."
+
           return nil unless rec  
           
           loc = new(FindIt::Location.new(rec[2], rec[3], :DEG),
@@ -62,6 +70,7 @@ module FindIt
             :state => 'TX',
             :origin => origin
           )
+          puts "LOC: #{loc.inspect}."
 	  loc
         end
         
