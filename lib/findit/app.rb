@@ -3,8 +3,8 @@ require 'rdbi-driver-sqlite3'
 
 # Include all of the local features that we want to support.
 require 'findit/feature/austin.ci.tx.us/fire-station'
-require 'findit/feature/austin.ci.tx.us/facility'
-#require 'findit/feature/austin.ci.tx.us/historical'
+#require 'findit/feature/austin.ci.tx.us/facility'
+require 'findit/feature/austin.ci.tx.us/historical'
 require 'findit/feature/austin.ci.tx.us/police-station'
 require 'findit/feature/austin.ci.tx.us/apd-incident'
 #require 'findit/feature/travis.co.tx.us/voting-place'
@@ -27,23 +27,8 @@ module FindIt
     #
     # Default value used when constructing a new FindIt::App instance.
     #
-    #DB_URI = "DBI:Pg:host=localhost;database=findit"
     DB_URI = 'DBI:SQLite3:cycle_nearby.db'
 
-    # Username credential to access the FindIt database.
-    #
-    # Default value used when constructing a new FindIt::App instance.
-    #
-    #DB_USER = "findit" 
-    DB_USER = nil
-    
-    # Password credential to access the FindIt database.
-    #
-    # Default value used when constructing a new FindIt::App instance.
-    #
-    #DB_PASSWORD = "tRdhxlJiREbg"
-    DB_PASSWORD = nil
-     
     # Features further than this distance (in miles) away from
     # the current location will be filtered out of results.
     #
@@ -64,36 +49,27 @@ module FindIt
     #   (default: MAX_DISTANCE)
     #    
     def initialize(options = {})
-      
       @db_uri = options[:db_uri] || DB_URI
       @db_user = options[:db_user] || DB_USER
       @db_password = options[:db_password] || DB_PASSWORD
       @max_distance = options[:max_distance] || MAX_DISTANCE
       
-      # DBI connection to the PostGIS "findit" database.
-#      @db = DBI.connect(@db_uri, @db_user, @db_password)
-      
-      # DBI connection to the SQLite3 "cycle_nearby" database.
-#      @db = DBI.connect(@db_uri)
-
       # RDBI connection to SQLite3 "cycle_nearby" database.
       @db = nil	# force scope
-      res = nil	# force scope
       begin
         @db = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
         @db.handle.enable_load_extension(true)
         @db.handle.load_extension('/usr/lib64/libspatialite.so')
       rescue
-        puts "EXCEPTION: #{$!}."
-      ensure
-        puts "RESULT: #{res.inspect}."
+        STDERR.puts "FATAL ERROR: unable to connect to database - #{$!}."
+        exit
       end
 
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
 #        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
 #        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
-#        FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
+        FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
         FindIt::Feature::Austin_CI_TX_US::FireStation, 
         FindIt::Feature::Austin_CI_TX_US::PoliceStation,
 #        FindIt::Feature::Travis_CO_TX_US::VotingPlaceFactory.create(@db, "20120731"),
