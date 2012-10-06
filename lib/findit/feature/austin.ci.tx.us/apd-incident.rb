@@ -16,8 +16,8 @@ module FindIt
             klass.instance_variable_set(:@marker, FindIt::Asset::MapMarker.new(
               'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
               :shadow => 'icon33s.png'))
-            klass.instance_variable_set(:@title, 'Latest bicycle theft')
-            klass.instance_variable_set(:@rectype, 'THEFT OF BICYCLE')            
+            klass.instance_variable_set(:@title, 'Closest bicycle theft')
+            klass.instance_variable_set(:@rectype, type)
             
           else
             raise "unknown incident type \"#{type}\""
@@ -40,9 +40,10 @@ module FindIt
             sth = @db.execute(%q{SELECT *,
             Distance(geometry, PointFromText(?, 4326)) AS distance
             FROM austin_ci_tx_us_apd_incident
+            WHERE crime_type = ?
             ORDER BY distance ASC
             LIMIT 1
-            }, "POINT(#{origin.lat} #{origin.lng})")
+            }, "POINT(#{origin.lat} #{origin.lng})", @rectype)
           rescue
             puts "EXCEPTION(#{__FILE__}: #{__LINE__}): #{$!.inspect}."
           end
@@ -57,10 +58,10 @@ module FindIt
               :address => rec[6].capitalize_words,
               :city => 'Austin',
               :state => 'TX',
+              :note => rec[4],	# date
               :origin => origin
               )
         end
-        
         
       end # class AbstractIncident
       
