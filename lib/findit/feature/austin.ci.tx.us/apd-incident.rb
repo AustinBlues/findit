@@ -38,12 +38,14 @@ module FindIt
         def self.closest(origin)
           begin
             sth = @db.execute(%q{SELECT *,
-            Distance(geometry, PointFromText(?, 4326)) AS distance
+            Distance(geometry, PointFromText(?, 4326)) AS distance,
+            X(Transform(geometry, 4326)) AS longitude,
+            Y(Transform(geometry, 4326)) AS latitude
             FROM austin_ci_tx_us_apd_incident
             WHERE crime_type = ?
             ORDER BY distance ASC
             LIMIT 1
-            }, "POINT(#{origin.lat} #{origin.lng})", @rectype)
+            }, "POINT(#{origin.lng} #{origin.lat})", @rectype)
           rescue
             puts "EXCEPTION(#{__FILE__}: #{__LINE__}): #{$!.inspect}."
           end
@@ -52,7 +54,7 @@ module FindIt
           sth.finish
 
           return nil unless rec  
-          
+
           new(FindIt::Location.new(rec[2], rec[3], :DEG),
               :title => @title,
               :address => rec[6].capitalize_words,
