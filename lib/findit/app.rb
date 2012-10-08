@@ -3,7 +3,7 @@ require 'rdbi-driver-sqlite3'
 
 # Include all of the local features that we want to support.
 require 'findit/feature/austin.ci.tx.us/fire-station'
-#require 'findit/feature/austin.ci.tx.us/facility'
+require 'findit/feature/austin.ci.tx.us/facility'
 require 'findit/feature/austin.ci.tx.us/historical'
 require 'findit/feature/austin.ci.tx.us/police-station'
 require 'findit/feature/austin.ci.tx.us/apd-incident'
@@ -49,9 +49,9 @@ module FindIt
     #   (default: MAX_DISTANCE)
     #    
     def initialize(options = {})
-      @db_uri = options[:db_uri] || DB_URI
-      @db_user = options[:db_user] || DB_USER
-      @db_password = options[:db_password] || DB_PASSWORD
+#      @db_uri = options[:db_uri] || DB_URI
+#      @db_user = options[:db_user] || DB_USER
+#      @db_password = options[:db_password] || DB_PASSWORD
       @max_distance = options[:max_distance] || MAX_DISTANCE
       
       # RDBI connection to SQLite3 "cycle_nearby" database.
@@ -67,8 +67,8 @@ module FindIt
 
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
-#        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
-#        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
+        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
+        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
         FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
         FindIt::Feature::Austin_CI_TX_US::FireStation, 
         FindIt::Feature::Austin_CI_TX_US::PoliceStation,

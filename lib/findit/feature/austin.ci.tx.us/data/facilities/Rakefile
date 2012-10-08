@@ -24,7 +24,7 @@ end
 task :load => [:load_check_table, :load_database, :clean]
  
 task :load_check_table do
-  raise "Load aborted: table #{TABLENAME} already exists" if db_table_exists?(TABLENAME)
+  raise "Load aborted: table #{TABLENAME} already exists" if FindIt::RakeDefs.db_table_exists?(TABLENAME)
 end
 
 file "#{SHAPEFILE_NAME}.shp" => [ZIPFILE] do
@@ -32,10 +32,10 @@ file "#{SHAPEFILE_NAME}.shp" => [ZIPFILE] do
 end
 
 task :load_database  => ["#{SHAPEFILE_NAME}.shp" ] do
-  db_load_shapefile(TABLENAME, SHAPEFILE_NAME, SRID)  
-  db_create_index(TABLENAME, "the_geom", "gist")
-  db_create_index(TABLENAME, "facility", "hash")
-  db_vacuum(TABLENAME)  
+  FindIt::RakeDefs.db_load_shapefile(TABLENAME, SHAPEFILE_NAME, SRID)
+  FindIt::RakeDefs.db_create_index(TABLENAME, "the_geom", "gist")
+  FindIt::RakeDefs.db_create_index(TABLENAME, "facility", "hash")
+  FindIt::RakeDefs.db_vacuum(TABLENAME)  
 end
 
 

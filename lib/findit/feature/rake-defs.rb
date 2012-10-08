@@ -1,4 +1,4 @@
-require "dbi"
+require "rdbi-driver-sqlite3"
 
 module FindIt
   
@@ -18,53 +18,46 @@ module FindIt
     # The "findit" role is not sufficient, because this needs to
     # make entries into the GIS tables.
     #
-    DB = DBI.connect("DBI:Pg:host=localhost;database=findit", "postgres")
-    
-    # Path to shp2pgsql utility.
-    #
-    # I need this because my Ubuntu system does not put it in
-    # a public bin directory.
-    #
-    SHP2PGSQL = "/usr/lib/postgresql/9.1/bin/shp2pgsql"
-    
-    
+#    DB = DBI.connect("DBI:Pg:host=localhost;database=findit", "postgres")
+    begin
+      DB = RDBI.connect(:SQLite3, :database => '/home/jeff//CycleNearby/cycle_nearby.db')
+      DB.handle.enable_load_extension(true)
+      DB.handle.load_extension('/usr/lib64/libspatialite.so')
+    rescue
+      puts "DB EXCEPTION: #{$!}."
+    end
+
     # Execute a SQL command on the connected database.
     #
     # Displays command to stderr.
     #
-    def db_execute(cmd)
+    def self.db_execute(cmd)
       $stderr.puts("+ " + cmd)
       DB.execute(cmd)
     end
     
     # Run the "shp2pgsql" command on a shape file and load the output.
-    def db_load_shapefile(table, shapefile, srid)    
-      IO.popen([SHP2PGSQL, "-s", srid, shapefile, table]) do |pp|
-        save_lines = []
-        pp.each_line do |line|
-          next if line =~ /^--/
-          save_lines << line.strip!
-          next unless line =~ /;$/
-          db_execute(save_lines.join(' '))
-          save_lines = []
-        end
-      end  
+    def self.db_load_shapefile(table, shapefile, srid)
+      db_path = '../../../../../../cycle_nearby.db'
+      result = `spatialite_tool -i -shp #{shapefile} -d #{db_path} -t #{table} -2 -c ASCII -s #{srid} -g the_geom`
+      puts "SHELL: #{result}"
     end
     
-    def db_create_index(table, column, idxtype = "hash")
-      db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} USING #{idxtype}(#{column})")
+    def self.db_create_index(table, column, idxtype = "hash")
+#      db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} USING #{idxtype}(#{column})")
+      db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} (#{column})")
     end
     
-    def db_vacuum(table)
-      db_execute("VACUUM FULL #{TABLENAME}")
+    def self.db_vacuum(table)
+      db_execute("VACUUM")
     end
     
-    def db_table_exists?(table)
-      DB.tables.include?(table)
+    def self.db_table_exists?(table)
+      !DB.table_schema(table).nil?
     end
       
-    def db_drop_table(table)
-      db_execute("DROP TABLE #{TABLENAME}")
+    def self.db_drop_table(table)
+      db_execute("DROP TABLE #{table}")
     end
 
   end # module RakeDefs

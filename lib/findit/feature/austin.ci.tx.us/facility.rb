@@ -62,25 +62,29 @@ module FindIt
         # See: FindIt::BaseFeature::closest
         #
         def self.closest(origin)
-
-          sth = @db.execute(%q{SELECT *,
-            ST_X(ST_Transform(the_geom, 4326)) AS longitude,
-            ST_Y(ST_Transform(the_geom, 4326)) AS latitude,
-            ST_Distance(ST_Transform(the_geom, 4326), ST_SetSRID(ST_Point(?, ?), 4326)) AS distance
+          begin
+            sth = @db.execute(%q{SELECT *,
+            X(Transform(the_geom, 4326)) AS longitude,
+            Y(Transform(the_geom, 4326)) AS latitude,
+            Distance(Transform(the_geom, 4326), GeomFromText(?, 4326)) AS distance
             FROM austin_ci_tx_us_facilities
             WHERE facility = ?
             ORDER BY distance ASC
             LIMIT 1
-          }, origin.lng, origin.lat, self.facility_type)
-          rec = sth.fetch
+          }, "POINT(#{origin.lng} #{origin.lat})", self.facility_type)
+          rescue
+            puts "EXCEPTION(#{__FILE__.split('/')[-1]}:#{__LINE__}): #{$!}."
+          end
+
+          rec = sth.fetch[0]	# FIXME? only using one of potentially many
           sth.finish
 
           return nil unless rec  
-          
-          new(FindIt::Location.new(rec[:latitude], rec[:longitude], :DEG),
+
+          new(FindIt::Location.new(rec[16], rec[15], :DEG),
             :title => self.facility_title,
-            :name => rec[:name].capitalize_words,
-            :address => rec[:address].capitalize_words,
+            :name => rec[6].capitalize_words,
+            :address => rec[5].capitalize_words,
             :city => "Austin",
             :state => "TX",
             :origin => origin
