@@ -20,7 +20,8 @@ module FindIt
     #
 #    DB = DBI.connect("DBI:Pg:host=localhost;database=findit", "postgres")
     begin
-      DB = RDBI.connect(:SQLite3, :database => '/home/jeff//CycleNearby/cycle_nearby.db')
+      DB = RDBI.connect(:SQLite3,
+                        :database => File.expand_path('cycle_nearby.db', '../../../../../..'))
       DB.handle.enable_load_extension(true)
       DB.handle.load_extension('/usr/lib64/libspatialite.so')
     rescue
