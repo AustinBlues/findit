@@ -38,9 +38,9 @@ module FindIt
         def self.closest(origin)
           begin
             sth = @db.execute(%q{SELECT *,
-            Distance(geometry, PointFromText(?, 4326)) AS distance,
-            X(Transform(geometry, 4326)) AS longitude,
-            Y(Transform(geometry, 4326)) AS latitude
+            Distance(the_geom, PointFromText(?, 4326)) AS distance,
+            X(Transform(the_geom, 4326)) AS longitude,
+            Y(Transform(the_geom, 4326)) AS latitude
             FROM austin_ci_tx_us_apd_incident
             WHERE crime_type = ?
             ORDER BY distance ASC
