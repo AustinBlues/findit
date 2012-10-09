@@ -19,7 +19,7 @@ The "Cycle Nearby" package includes:
 * a RESTful web service
 * tools for acquiring and processing public datasets
 
-It is not yet publically available.
+There is not yet any public host of the application.
 
 The source code is published at: https://github.com/AustinBlues/findit
 
@@ -31,4 +31,5 @@ Find It Nearby, based on work at Code for America Hack-a-thon II,
 Sept, 2012.
 
 Cycle Nearby: Jeffrey Taylor | jeff.taylor@ieee.org | http://blog.amethystrss.net/
+
 Find It Nearby: Chip Rosenthal | chip@unicom.com | http://www.unicom.com/
