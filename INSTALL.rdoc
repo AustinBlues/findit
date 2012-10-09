@@ -1,68 +1,62 @@
-= Installing the Find It Nearby Application
+= Installing the Cycle Nearby Application
 
-The FindIt application has been tested with Ruby 1.9.1.
+The Cycle Nearby application has been tested with Ruby 1.9.2 and
+Linux.  Ruby 1.9.1 is known not to work.  Other versions of Ruby and
+other operating systems have not been tested.
 
-To run the application, you will need to install the following Ruby Gems:
+To run the application, you will need to install the following packages:
+* Git
+* Ruby 1.9.2
+* Rake
+* SQLite3
+* libspatialite
+* spatialite-tools
+* unzip
 
-* dbd-pg (tested with version 0.3.9)
-* dbi (tested with version 0.4.5)
-* pg (tested with version 0.13.2)
-* sinatra (tested with version 1.3.2)
+You will need to locate the libspatilite shared library:
+libspatialite.so on Linux, libspatialite.dll on Windows.  Edit the
+following files and replace '/usr/lib64/libspatialite.so' with the
+correct path and shared library name.
 
-Under Linux, you can do this by running the command:
+./update_apd_incidents.rb:dbh.handle.load_extension('/usr/lib64/libspatialite.so')
+./lib/findit/feature/rake-defs.rb:      DB.handle.load_extension('/usr/lib64/libspatialite.so')
+./lib/findit/app.rb:        @db.handle.load_extension('/usr/lib64/libspatialite.so')
 
-  $ sudo gem install dbd-pg dbi pg sinatra
+Download the source into ./CycleNearby with:
 
-You also will need need to install the PostgreSQL database and PostGIS extensions.
+  $ git clone -b SQLite3 https://github.com/AustinBlues/findit CycleNearby
+  $ cd CycleNearby
 
-Once you have the above requirements complete, setup the database by:
+You also need the Bundler Ruby Gem.  To install the other needed Ruby
+Gems, run the command:
 
-* Create a PostgreSQL database user. Adjust the <tt>DBI.connect()</tt> statement in
-  "lib/findit/app.rb" with the username and password credentials you used.
+  $ bundle install
 
-* Create a new, empty PostgreSQL database named "findit", owned by the user you
-  created above.
+Once you have the above requirements complete, create and populate the
+database with the following commands ('$' is the prompt, don't type it):
 
-* Load the database with the "findit.sql" file distributed with this package.
-
-Here is an example session:
-
-  $ sudo -u postgres psql
-  psql (9.1.4)
-  Type "help" for help.
-
-  postgres=# create user findit with password 'XXXXXXXX';
-  CREATE ROLE
-  postgres=# create database findit with owner findit;
-  CREATE DATABASE
-  postgres=# \c findit
-  You are now connected to database "findit" as user "postgres".
-  findit=# \i findit.sql
-  SET
-  SET
-    .
-    .
-    .
-  ALTER DEFAULT PRIVILEGES
-  ALTER DEFAULT PRIVILEGES
-  findit=# \q
-  $
+  $ spatialite cycle_nearby.db < cycle_nearby.sql
+  $ cd lib/findit/feature/austin.ci.tx.us/data/historical
+  $ rake -f Rakefile load
+  $ cd ../facilities
+  $ rake -f Rakefile load
+  $ cd ../../../../../..
+  $ ruby update_apd_incidents.rb
 
 Now you are ready to run the application:
 
-  $ ruby bin/findit-svc
-  2012-07-12 14:18:06] INFO  WEBrick 1.3.1
-  [2012-07-12 14:18:06] INFO  ruby 1.9.2 (2011-07-09) [x86_64-linux]
-  == Sinatra/1.3.2 has taken the stage on 4567 for development with backup from WEBrick
-  [2012-07-12 14:18:06] INFO  WEBrick::HTTPServer#start: pid=3968 port=4567
+  $ rackup -p 4567
+  >> Thin web server (v1.4.1 codename Chromeo)
+  >> Maximum connections set to 1024
+  >> Listening on 0.0.0.0:4567, CTRL+C to stop
 
 Finally, if you browse to http://localhost:4567 the application should launch. It should
 first try to locate your current position, and then it should draw a map showing your
 position and surrounding features.
 
-== Production Deployment
+== Production Deployment (TDB)
 
-For production use, I serve the Find It Nearby application with the Apache HTTP
+For production use, I serve the Cycle Nearby application with the Apache HTTP
 web server using Phusion Passenger (http://www.modrails.com/).
 
 Here is the procedure to do that:

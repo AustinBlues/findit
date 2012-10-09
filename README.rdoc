@@ -1,28 +1,34 @@
-= Find It Nearby
+= Cycle Nearby
 
-The "Find It Nearby" application identifies features in Austin, TX
-that are closest to you. The features it knows about are:
+The "Cycle Nearby" application identifies features of interest to
+cyclists in Austin, TX that are closest to you.  It is a fork of "Find
+It Nearby". The features it currently knows about are:
 
 * Fire Station
 * Police Station
 * Post Office
 * Library
 * Moon Tower
-* Voting Place
 
-The "Find It Nearby" package includes:
+This list is subject to changes based on feedback from the cycling
+community.
+
+The "Cycle Nearby" package includes:
 
 * a mobile-friendly web application
 * a RESTful web service
 * tools for acquiring and processing public datasets
 
-You can view the application running at: http://nearby.webatx.us/
+It is not yet publically available.
 
-The source code is published at: https://github.com/chip-rosenthal/findit
+The source code is published at: https://github.com/AustinBlues/findit
 
 This application was created to demonstrate the value of open
-government data, and the sorts of tools that can be build on
-public datasets. This is based on work from the Code for America
-Hack-a-Thon in Austin, TX on Feb 25, 2012.
+government data, and the sorts of tools that can be build on public
+datasets. Find It Nearby is based on work from the Code for America
+Hack-a-Thon in Austin, TX on Feb 25, 2012.  Cycle Nearby builds on
+Find It Nearby, based on work at Code for America Hack-a-thon II,
+Sept, 2012.
 
-Chip Rosenthal | chip@unicom.com | http://www.unicom.com
+Cycle Nearby: Jeffrey Taylor | jeff.taylor@ieee.org | http://blog.amethystrss.net/
+Find It Nearby: Chip Rosenthal | chip@unicom.com | http://www.unicom.com/
