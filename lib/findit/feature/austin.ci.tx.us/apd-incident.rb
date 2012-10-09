@@ -16,7 +16,7 @@ module FindIt
             klass.instance_variable_set(:@marker, FindIt::Asset::MapMarker.new(
               'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
               :shadow => 'icon33s.png'))
-            klass.instance_variable_set(:@title, 'Closest bicycle theft')
+            klass.instance_variable_set(:@title, 'Closest bicycle thefts')
             klass.instance_variable_set(:@rectype, type)
             
           else
@@ -44,25 +44,26 @@ module FindIt
             FROM austin_ci_tx_us_apd_incident
             WHERE crime_type = ?
             ORDER BY distance ASC
-            LIMIT 1
+            LIMIT 5
             }, "POINT(#{origin.lng} #{origin.lat})", @rectype)
           rescue
             puts "EXCEPTION(#{__FILE__}: #{__LINE__}): #{$!.inspect}."
           end
 
-          rec = sth.fetch[0]	  # FIXME: only using first of potentially many
+          records = sth.fetch(:all)
           sth.finish
 
-          return nil unless rec  
+          return nil unless records  
 
-          new(FindIt::Location.new(rec[2], rec[3], :DEG),
-              :title => @title,
-              :address => rec[6].capitalize_words,
-              :city => 'Austin',
-              :state => 'TX',
-              :note => rec[4],	# date
-              :origin => origin
-              )
+          records.map{|rec| new(FindIt::Location.new(rec[2], rec[3], :DEG),
+                                :title => @title,
+                                :address => rec[6].capitalize_words,
+                                :city => 'Austin',
+                                :state => 'TX',
+                                :note => rec[4],	# date
+                                :origin => origin
+                                )
+          }
         end
         
       end # class AbstractIncident

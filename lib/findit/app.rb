@@ -49,9 +49,6 @@ module FindIt
     #   (default: MAX_DISTANCE)
     #    
     def initialize(options = {})
-#      @db_uri = options[:db_uri] || DB_URI
-#      @db_user = options[:db_user] || DB_USER
-#      @db_password = options[:db_password] || DB_PASSWORD
       @max_distance = options[:max_distance] || MAX_DISTANCE
       
       # RDBI connection to SQLite3 "cycle_nearby" database.
@@ -96,7 +93,7 @@ module FindIt
         # For each class, run the "closest" method to find the
         # closest feature of its type.
         klass.send(:closest, origin)
-      end.reject do |feature|
+      end.flatten.reject do |feature|
         # Reject results that came back nil or are too far away.
         feature.nil? || feature.distance > MAX_DISTANCE
       end
