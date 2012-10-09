@@ -16,11 +16,8 @@ APD2DB_MAP = {
   'Crime Type' => 'crime_type',
   'Date' => 'date',
   'Time' => 'time',
-  # This appears to be backwards?
-#  'LATITUDE' => 'latitude',
-#  'LONGITUDE' => 'longitude',
-  'LATITUDE' => 'longitude',
-  'LONGITUDE' => 'latitude',
+  'LATITUDE' => 'latitude',
+  'LONGITUDE' => 'longitude',
   'ADDRESS' => 'address'
 }
 
@@ -93,11 +90,8 @@ total_records = 0
 new_records = 0
 dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |sth|
   theft_of_bicycle(view).each do |row|
-    # APD Incident data is backwards
-#    latitude = row[apd_position['LATITUDE']]
-#    longitude = row[apd_position['LONGITUDE']]
-    longitude = row[apd_position['LATITUDE']]
-    latitude = row[apd_position['LONGITUDE']]
+    latitude = row[apd_position['LATITUDE']]
+    longitude = row[apd_position['LONGITUDE']]
     if latitude && longitude
       result = sth.execute(row[apd_position['Incident Report Number']])
       if result.fetch[0].empty?
