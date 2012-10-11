@@ -1,11 +1,11 @@
-DOWNLOAD_URL = "ftp://ftp.ci.austin.tx.us/GIS-Data/Regional/regional/historical.zip"
-ZIPFILE = "historical.zip"
+DOWNLOAD_URL = 'ftp://ftp.ci.austin.tx.us/GIS-Data/Regional/regional/historical.zip'
+ZIPFILE = 'historical.zip'
 
-UNPACKED_FILES_PATTERN = "historical_landmarks.*"
-SHAPEFILE_NAME = "historical_landmarks"
+UNPACKED_FILES_PATTERN = 'historical_landmarks.*'
+SHAPEFILE_NAME = 'historical_landmarks'
 
-TABLENAME = "austin_ci_tx_us_historical"
-SRID = "2277"
+TABLENAME = 'austin_ci_tx_us_historical'
+SRID = '2277'
 
 require '../../../rake-defs.rb'
 
@@ -15,7 +15,7 @@ require '../../../rake-defs.rb'
 task :default => [ZIPFILE] 
   
 file ZIPFILE do |t|
-  sh("wget", "-O", t.name, DOWNLOAD_URL)
+  sh('wget', '-O', t.name, DOWNLOAD_URL)
 end
 
 
@@ -33,8 +33,8 @@ end
 
 task :load_database  => ["#{SHAPEFILE_NAME}.shp" ] do
   FindIt::RakeDefs.db_load_shapefile(TABLENAME, SHAPEFILE_NAME, SRID)  
-  FindIt::RakeDefs.db_create_index(TABLENAME, "the_geom", "gist")
-  FindIt::RakeDefs.db_create_index(TABLENAME, "building_n", "hash")
+  FindIt::RakeDefs.db_create_index(TABLENAME, 'the_geom')
+  FindIt::RakeDefs.db_create_index(TABLENAME, 'building_n')
   FindIt::RakeDefs.db_vacuum(TABLENAME)  
 end
 

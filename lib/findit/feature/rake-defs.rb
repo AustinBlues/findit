@@ -44,7 +44,7 @@ module FindIt
       puts "SHELL: #{result}"
     end
     
-    def self.db_create_index(table, column, idxtype = "hash")
+    def self.db_create_index(table, column)
 #      db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} USING #{idxtype}(#{column})")
       db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} (#{column})")
     end
