@@ -16,8 +16,6 @@ APD2DB_MAP = {
   'Crime Type' => 'crime_type',
   'Date' => 'date',
   'Time' => 'time',
-  'LATITUDE' => 'latitude',
-  'LONGITUDE' => 'longitude',
   'ADDRESS' => 'address'
 }
 

@@ -55,12 +55,12 @@ module FindIt
 
           return nil unless records  
 
-          records.map{|rec| new(FindIt::Location.new(rec[2], rec[3], :DEG),
+          records.map{|rec| new(FindIt::Location.new(rec[8], rec[7], :DEG),
                                 :title => @title,
-                                :address => rec[6].capitalize_words,
+                                :address => rec[4].capitalize_words,
                                 :city => 'Austin',
                                 :state => 'TX',
-                                :note => rec[4],	# date
+                                :note => rec[2],	# date
                                 :origin => origin
                                 )
           }
