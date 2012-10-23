@@ -1,0 +1,3 @@
+#!/bin/sh
+#
+~/bin/write-mime-multipart --output=ubuntu-config `for i in [0-9][0-9]-*[^~]; do echo $i; done`
