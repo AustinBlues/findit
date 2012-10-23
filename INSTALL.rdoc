@@ -13,6 +13,11 @@ To run the application, you will need to install the following packages:
 * spatialite-tools
 * unzip
 
+Download the source into ./CycleNearby with:
+
+  $ git clone -b SQLite3 https://github.com/AustinBlues/findit CycleNearby
+  $ cd CycleNearby
+
 You will need to locate the libspatilite shared library:
 libspatialite.so on Linux, libspatialite.dll on Windows.  Edit the
 following files and replace '/usr/lib64/libspatialite.so' with the
@@ -21,11 +26,6 @@ correct path and shared library name.
 ./update_apd_incidents.rb:dbh.handle.load_extension('/usr/lib64/libspatialite.so')
 ./lib/findit/feature/rake-defs.rb:      DB.handle.load_extension('/usr/lib64/libspatialite.so')
 ./lib/findit/app.rb:        @db.handle.load_extension('/usr/lib64/libspatialite.so')
-
-Download the source into ./CycleNearby with:
-
-  $ git clone -b SQLite3 https://github.com/AustinBlues/findit CycleNearby
-  $ cd CycleNearby
 
 You also need the Bundler Ruby Gem.  To install the other needed Ruby
 Gems, run the command:
