@@ -2,6 +2,6 @@
 #
 git clone https://github.com/AustinBlues/findit.git /home/ubuntu/CycleNearby
 chown -R ubuntu:ubuntu /home/ubuntu/CycleNearby
-#su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
-#su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
+su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
+su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
 
