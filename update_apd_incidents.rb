@@ -77,7 +77,7 @@ end
 dbh = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
 # Load spatialite extension
 dbh.handle.enable_load_extension(true)
-dbh.handle.load_extension('/usr/lib64/libspatialite.so')
+dbh.handle.load_extension('/usr/lib/libspatialite.so')
 cn_position = {}
 columns = dbh.table_schema('austin_ci_tx_us_apd_incident').columns
 columns.each_with_index do |col, i|

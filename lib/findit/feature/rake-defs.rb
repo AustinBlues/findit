@@ -9,21 +9,14 @@ module FindIt
   #
   module RakeDefs
     
-    # Connection to the PostGIS/Postgresql database.
+    # Connection to the SQLite3/spatialite database.
     #
-    # This connects as user "postgres" and no password. This will
-    # work if you run this as a user that has permissions to access
-    # the database in the "postgres" role.
-    #
-    # The "findit" role is not sufficient, because this needs to
-    # make entries into the GIS tables.
-    #
-#    DB = DBI.connect("DBI:Pg:host=localhost;database=findit", "postgres")
     begin
       DB = RDBI.connect(:SQLite3,
-                        :database => File.expand_path('cycle_nearby.db', '../../../../../..'))
+                        :database => File.expand_path('cycle_nearby.db',
+                                                      '../../../../../..'))
       DB.handle.enable_load_extension(true)
-      DB.handle.load_extension('/usr/lib64/libspatialite.so')
+      DB.handle.load_extension('/usr/lib/libspatialite.so')
     rescue
       puts "DB EXCEPTION: #{$!}."
     end
@@ -41,11 +34,10 @@ module FindIt
     def self.db_load_shapefile(table, shapefile, srid)
       db_path = '../../../../../../cycle_nearby.db'
       result = `spatialite_tool -i -shp #{shapefile} -d #{db_path} -t #{table} -2 -c ASCII -s #{srid} -g the_geom`
-      puts "SHELL: #{result}"
+#      puts "SHELL: #{result}"
     end
     
     def self.db_create_index(table, column)
-#      db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} USING #{idxtype}(#{column})")
       db_execute("CREATE INDEX idx_#{table}_#{column} ON #{table} (#{column})")
     end
     

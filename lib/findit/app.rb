@@ -23,12 +23,6 @@ module FindIt
   #
   class App
   
-    # DBI URI for the FindIt database.
-    #
-    # Default value used when constructing a new FindIt::App instance.
-    #
-    DB_URI = 'DBI:SQLite3:cycle_nearby.db'
-
     # Features further than this distance (in miles) away from
     # the current location will be filtered out of results.
     #
@@ -39,11 +33,6 @@ module FindIt
     # Construct a new FindIt app instance.
     #
     # Options:
-    # * :db_uri - DBI URI for the FindIt database. (default: DB_URI)
-    # * :db_user - Username credential to access the FindIt database.
-    #   (default: DB_USER)
-    # * :db_password - Password credential to access the FindIt database.
-    #   (default: DB_PASSWORD)
     # * :max_distance -  Features further than this distance (in miles)
     #   away from the current location will be filtered out of results.
     #   (default: MAX_DISTANCE)
@@ -56,7 +45,7 @@ module FindIt
       begin
         @db = RDBI.connect(:SQLite3, :database => 'cycle_nearby.db')
         @db.handle.enable_load_extension(true)
-        @db.handle.load_extension('/usr/lib64/libspatialite.so')
+        @db.handle.load_extension('/usr/lib/libspatialite.so')
       rescue
         STDERR.puts "FATAL ERROR: unable to connect to database - #{$!}."
         exit
