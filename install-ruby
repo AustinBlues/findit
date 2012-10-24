@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 \curl -L https://get.rvm.io | bash -s stable
 source ~/.rvm/scripts/rvm
