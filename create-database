@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+source ~/.rvm/scripts/rvm
+cd CycleNearby
+spatialite cycle_nearby.db < cycle_nearby.sql
+cd lib/findit/feature/austin.ci.tx.us/data/historical
+rake -f Rakefile load
+cd ../facilities
+rake -f Rakefile load
+cd ../../../../../..
+ruby update_apd_incidents.rb
