@@ -1,0 +1,9 @@
+#upstart-job
+description "Cycle Nearby Web server"
+start on stopped rc RUNLEVEL=[2345]
+console output
+script
+export SERVER_PORT=80
+cd /home/ubuntu/CycleNearby
+/home/ubuntu/.rvm/bin/ruby-1.9.2-p320 /home/ubuntu/.rvm/gems/ruby-1.9.2-p320/bin/rackup -p 80
+end script
