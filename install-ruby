@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 \curl -L https://get.rvm.io | bash -s stable
-source ~/.rvm/scripts/rvm
+source /home/ubuntu/.rvm/scripts/rvm
 rvm pkg install zlib --verify-downloads 1
 rvm pkg install openssl
 echo 'q' | rvm install --force ruby-1.9.2 --with-openssl-dir=$rvm_path/usr
 rvm use ruby-1.9.2
-cd ~/CycleNearby
+cd /home/ubuntu/CycleNearby
 bundle install

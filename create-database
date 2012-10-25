@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-source ~/.rvm/scripts/rvm
-cd CycleNearby
+source /home/ubuntu/.rvm/scripts/rvm
+cd /home/ubuntu/CycleNearby
 spatialite cycle_nearby.db < cycle_nearby.sql
 cd lib/findit/feature/austin.ci.tx.us/data/historical
 rake -f Rakefile load
