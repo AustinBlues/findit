@@ -1,7 +1,7 @@
-Content-Type: multipart/mixed; boundary="===============6615214021935785312=="
+Content-Type: multipart/mixed; boundary="===============2988271825993972071=="
 MIME-Version: 1.0
 
---===============6615214021935785312==
+--===============2988271825993972071==
 Content-Type: text/cloud-config; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -10,7 +10,7 @@ Content-Disposition: attachment; filename="07-byobu"
 #cloud-config
 byobu_by_default: system
 
---===============6615214021935785312==
+--===============2988271825993972071==
 Content-Type: text/cloud-config; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -53,21 +53,7 @@ packages:
  - g++
  - htop
 
---===============6615214021935785312==
-Content-Type: text/x-shellscript; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="20-install-app"
-
-#!/bin/sh
-#
-git clone https://github.com/AustinBlues/findit.git /home/ubuntu/CycleNearby
-chown -R ubuntu:ubuntu /home/ubuntu/CycleNearby
-su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
-su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
-
-
---===============6615214021935785312==
+--===============2988271825993972071==
 Content-Type: text/upstart-job; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -83,7 +69,21 @@ cd /home/ubuntu/CycleNearby
 /home/ubuntu/.rvm/bin/ruby-1.9.2-p320 /home/ubuntu/.rvm/gems/ruby-1.9.2-p320/bin/rackup -p 80
 end script
 
---===============6615214021935785312==
+--===============2988271825993972071==
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="30-install-app"
+
+#!/bin/sh
+#
+git clone https://github.com/AustinBlues/findit.git /home/ubuntu/CycleNearby
+chown -R ubuntu:ubuntu /home/ubuntu/CycleNearby
+su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
+su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
+start cycle-server
+
+--===============2988271825993972071==
 Content-Type: text/x-shellscript; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -93,4 +93,4 @@ Content-Disposition: attachment; filename="99-complete"
 #
 uptime > /home/ubuntu/complete
 
---===============6615214021935785312==--
+--===============2988271825993972071==--
