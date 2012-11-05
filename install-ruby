@@ -1,10 +1,11 @@
 #!/bin/bash
 #
 \curl -L https://get.rvm.io | bash -s stable
-~/.rvm/bin/rvm pkg install zlib --verify-downloads 1
-~/.rvm/bin/rvm pkg install openssl
-~/.rvm/bin/rvm install 1.9.2 -C --with-openssl-dir=$HOME/.rvm/usr
 source ~/.rvm/scripts/rvm
+rvm pkg install zlib --verify-downloads 1
+rvm pkg install openssl
+# As command, doesn't prompt for paging quit.
+command rvm install 1.9.2 -C --with-openssl-dir=$rvm_path/usr
 rvm use ruby-1.9.2
 cd ~/CycleNearby
 bundle install

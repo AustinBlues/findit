@@ -80,9 +80,9 @@ Content-Disposition: attachment; filename="30-install-app"
 git clone https://github.com/AustinBlues/findit.git /home/ubuntu/CycleNearby
 git checkout RVM
 chown -R ubuntu:ubuntu /home/ubuntu/CycleNearby
-#su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
-#su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
-#start cycle-server
+su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
+su ubuntu -c "/home/ubuntu/CycleNearby/create-database"
+start cycle-server
 
 --===============2988271825993972071==
 Content-Type: text/x-shellscript; charset="us-ascii"
