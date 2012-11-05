@@ -78,7 +78,7 @@ Content-Disposition: attachment; filename="30-install-app"
 #!/bin/sh
 #
 git clone https://github.com/AustinBlues/findit.git /home/ubuntu/CycleNearby
-chown -R ubuntu:ubuntu /home/ubuntu/CycleNearby
+chown -R ubuntu:ubuntu /home/ubuntu
 cd /home/ubuntu/CycleNearby
 git checkout RVM
 su ubuntu -c "/home/ubuntu/CycleNearby/install-ruby"
