@@ -54,29 +54,73 @@ Finally, if you browse to http://localhost:4567 the application should launch. I
 first try to locate your current position, and then it should draw a map showing your
 position and surrounding features.
 
-== Production Deployment (TDB)
+== Production Deployment (AWS)
 
-For production use, I serve the Cycle Nearby application with the Apache HTTP
-web server using Phusion Passenger (http://www.modrails.com/).
+"There's more than one way to do it."
+                      -- Larry Wall, creator of Perl
 
-Here is the procedure to do that:
+For production use, I suggest Amazon Web Service (AWS).  Cycle Nearby
+will fit on a AWS t1.micro instance.  This is free for a year for new
+AWS users.  A micro instance costs $0.02 per CPU hour, plus storage
+and bandwidth charges.  This works out to $15-$20 per month.
 
-* Install the <i>passenger</i> Ruby gem (and its dependencies).
+First step is to fork the AustinBlues/findit project repository of
+GitHub.  This repository is Austin, Texas specific.  You must localize
+it to get any good out of it.
 
-* Then run the "passenger-install-apache2-module" script that is distributed
-  with the gem.
-  
-* Configure Apache for Passenger. Here is the server configuration I use:
+Next install (clone) from your GitHub repository onto your computer
+(see above) and localize it for your community.  Look through the code
+in lib/findit/feature for examples.  You will need to change the
+Github repository of the 'git clone' command in ubuntu-config to your
+repository.  Once it works on your computer, push the changes to
+Github.
 
-    LoadModule passenger_module /var/lib/gems/1.9.1/gems/passenger-3.0.11/ext/apache2/mod_passenger.so
-    PassengerRoot /var/lib/gems/1.9.1/gems/passenger-3.0.11
-    PassengerRuby /usr/bin/ruby1.9.1
-    
-    # Passenger will be enabled in the .htaccess file of the application.
-    PassengerEnabled off
+To launch in the AWS cloud, I suggest using the Web interface.  Use
+the EC2 Management Console Dashboard
+(https://console.aws.amazon.com/ec2/home).  You may wish to change the
+default region.  If the majority of your users are in the US, I
+recommend the us-west-2 (N. Oregon) or us-west-1 (N. California).  The
+us-east-1 region (N. Virginia) is the least reliable US region.
 
-* Finally, setup a virtual web server with <i>DocumentRoot</i> set to the "findit/public"
-  directory.
+After changing the default region, click the 'Launch Instance' button.
+Select the Classic Wizard and click 'Continue'.  Be sure the 64-bit
+radio button on 'Ubuntu Server 12.04.1 LTS' is enabled and click
+'Select' on it.  On the next screen, select 'T1 Micro' instance type
+and click 'Continue'.  On the 'Advanced Instance Options'
+screen, under 'User Data', click the 'file' radio button, and use the
+file browser to select your 'ubuntu-config' file.  No changes are
+needed on the 'Storage Device Configuration' screen, just click
+'Continue'.  The next screen does not need any input for simple
+setups.  
+
+Create a new key pair or use an existing key pair on the next screen.
+You will need the private key (a PEM file) to log into your EC2
+instance via SSH.  Click 'Continue'.
+
+Create a new security group or use an existing one to configure the
+firewall.  Ports 22 and 80 must be open.  The base Cycle Nearby does
+not need any other ports open.  Click 'Continue'.
+
+On the final screen, review the details.  Click 'back' to go back and
+change any mistakes.  Click 'Launch'.  Click 'Close' after the
+instance is launched, and select the new instance to monitor.  The new
+instance will take close to an hour to install all needed software and
+start the Web server.  You can log into the instance via SSH using the
+private key PEM file downloaded above to identify yourself.  AWS does
+not allow password logins, you must use the private key.
+
+Debugging: it isn't easy.  There may be some useful information in
+/var/log/cloud-init.  Problems usually are in the install-ruby and
+create-database scripts.  Try commenting out the invocation of these
+scripts in 'ubuntu-config', launching a new instance, logging in via
+SSH, and running the scripts manually.  Contact me at
+jeff.taylor@ieee.org if you need help.
+
+== Contributors
+
+Jeffrey Taylor
+jeff.taylor@ieee.org
+October 31, 2012
 
 Chip Rosenthal
 chip@unicom.com
