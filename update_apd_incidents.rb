@@ -2,13 +2,12 @@
 require 'socrata'
 require 'rdbi-driver-sqlite3'
 
-ONE_MONTH = 30 * 24 * 60 * 60	# in seconds
-
+# How old data to use
+HORIZON = 30 * 24 * 60 * 60	# One month in seconds
 
 # Austin Police Dept (APD) Incident data URL and ID
 APD_INCIDENT = 'http://data.austintexas.gov/'
 ID = 'b4y9-5x39'
-
 
 # Austin Police Department Socrata column name to database field mapping
 APD2DB_MAP = {
@@ -53,7 +52,7 @@ def theft_of_bicycle(view)
 		    :children => [
 		      {:columnId => date_id, :type => 'column'},
 		      {:type => 'literal',
-			:value => Time.now.to_i - ONE_MONTH
+			:value => Time.now.to_i - HORIZON
 		      }
 		    ]
 		  }
@@ -109,5 +108,9 @@ dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |st
 end
 
 puts "#{new_records} new records out of #{total_records} total."
+
+# Delete old records
+dbh.execute('DELETE FROM austin_ci_tx_us_apd_incident WHERE date < ?',
+                     (Time.now - 24 * 60 * 60).strftime('%Y-%m-%d'))
 
 dbh.disconnect
