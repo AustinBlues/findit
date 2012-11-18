@@ -3,7 +3,7 @@ require 'socrata'
 require 'rdbi-driver-sqlite3'
 
 # How old data to use
-HORIZON = 30 * 24 * 60 * 60	# One month in seconds
+HORIZON = 30 * 24 * 60 * 60	# 30 days in seconds
 
 # Austin Police Dept (APD) Incident data URL and ID
 APD_INCIDENT = 'http://data.austintexas.gov/'
@@ -22,10 +22,8 @@ APD2DB_MAP = {
 # Convert from Socrata formatting to SQL VALUES formatting
 def socrata2sql(value, data_type)
   case data_type
-  when 'text'
-    "'#{value}'"
   when 'date'
-    "'#{Time.at(value).strftime('%Y-%m-%d')}'"
+    Time.at(value).strftime('%Y-%m-%d')
   else
     value
   end
@@ -86,23 +84,30 @@ end
 total_records = 0
 new_records = 0
 dbh.prepare('SELECT uid FROM austin_ci_tx_us_apd_incident WHERE uid = ?') do |sth|
-  theft_of_bicycle(view).each do |row|
-    latitude = row[apd_position['LATITUDE']]
-    longitude = row[apd_position['LONGITUDE']]
-    if latitude && longitude
-      result = sth.execute(row[apd_position['Incident Report Number']])
-      if result.fetch[0].empty?
-	values = Array.new(APD2DB_MAP.size+1)
-	APD2DB_MAP.each do |apd, cn|
-	  values[cn_position[cn]] = socrata2sql(row[apd_position[apd]], apd_data_type[apd])
-	end
-        values[-1] = "GeomFromText('POINT(#{longitude} #{latitude})', 4326)"
-        sql = "INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{values.join(', ')})"
-        puts "SQL: #{sql};"
-        dbh.execute(sql)
-	new_records += 1
+  bindings = Array.new(APD2DB_MAP.size+1, '?')
+  bindings[-1] = "GeomFromText(?, 4326)"
+  sql = "INSERT INTO austin_ci_tx_us_apd_incident VALUES(#{bindings.join(', ')})"
+#  puts "SQL: #{sql};"
+  dbh.prepare(sql) do |ith|
+    theft_of_bicycle(view).each do |row|
+      latitude = row[apd_position['LATITUDE']]
+      longitude = row[apd_position['LONGITUDE']]
+      if latitude && longitude
+        # Map only reports with latitude and longitude
+        result = sth.execute(row[apd_position['Incident Report Number']])
+        if result.fetch[0].empty?
+          # Report not already in database
+#          bindings = Array.new(APD2DB_MAP.size+1)
+          APD2DB_MAP.each do |apd, cn|
+            bindings[cn_position[cn]] = socrata2sql(row[apd_position[apd]], apd_data_type[apd])
+          end
+          bindings[-1] = "POINT(#{longitude} #{latitude})"
+          puts "BINDINGS: #{bindings}."
+          ith.execute(*bindings)
+          new_records += 1
+        end
+        total_records += 1
       end
-      total_records += 1
     end
   end
 end
@@ -111,6 +116,6 @@ puts "#{new_records} new records out of #{total_records} total."
 
 # Delete old records
 dbh.execute('DELETE FROM austin_ci_tx_us_apd_incident WHERE date < ?',
-                     (Time.now - 24 * 60 * 60).strftime('%Y-%m-%d'))
+                     socrata2sql(Time.now - HORIZON, 'date'))
 
 dbh.disconnect
