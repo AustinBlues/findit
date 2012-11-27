@@ -3,7 +3,7 @@ require 'socrata'
 require 'rdbi-driver-sqlite3'
 
 # How old data to use
-HORIZON = 30 * 24 * 60 * 60	# 30 days in seconds
+HORIZON = 300 * 24 * 60 * 60	# 300 days in seconds
 
 # Austin Police Dept (APD) Incident data URL and ID
 APD_INCIDENT = 'http://data.austintexas.gov/'
@@ -42,7 +42,8 @@ def theft_of_bicycle(view)
 		    :value => 'EQUALS',
 		    :children => [
 		      {:columnId =>  crime_type_id, :type => 'column'},
-		      {:type => 'literal', :value => 'THEFT OF BICYCLE'}
+#		      {:type => 'literal', :value => 'THEFT OF BICYCLE'}
+                                  {:type => 'literal', :value => 'AUTO-BICYCLE CRASH/COLLISION'}
 		    ]
 		  },
 		  {:type => 'operator',
