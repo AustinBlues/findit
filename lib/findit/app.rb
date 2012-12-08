@@ -22,6 +22,7 @@ module FindIt
   #    features = findit.nearby(latitude, longitude))
   #
   class App
+    include FindIt::Feature::Austin_CI_TX_US
   
     # Features further than this distance (in miles) away from
     # the current location will be filtered out of results.
@@ -53,13 +54,18 @@ module FindIt
 
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
-        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :POST_OFFICE),
-        FindIt::Feature::Austin_CI_TX_US::FacilityFactory.create(@db, :LIBRARY),
-        FindIt::Feature::Austin_CI_TX_US::HistoricalFactory.create(@db, :MOON_TOWER),
-        FindIt::Feature::Austin_CI_TX_US::FireStation, 
-        FindIt::Feature::Austin_CI_TX_US::PoliceStation,
+        FacilityFactory.create(@db, :POST_OFFICE),
+        FacilityFactory.create(@db, :LIBRARY),
+        HistoricalFactory.create(@db, :MOON_TOWER),
+        FireStation, 
+        PoliceStation,
 #        FindIt::Feature::Travis_CO_TX_US::VotingPlaceFactory.create(@db, "20120731"),
-	FindIt::Feature::Austin_CI_TX_US::IncidentFactory.create(@db, 'THEFT OF BICYCLE'),
+	IncidentFactory.create(@db, 'THEFT OF BICYCLE', 
+                               :icon => 'http://maps.google.com/mapfiles/kml/pal3/icon41.png',
+                               :shadow => 'icon41s.png'),
+	IncidentFactory.create(@db, 'AUTO-BICYCLE CRASH/COLLISION', 
+                               :icon => 'http://maps.google.com/mapfiles/kml/pal3/icon37.png',
+                               :shadow => 'icon37s.png'),
       ]  
       
     end

@@ -39,10 +39,10 @@ def theft_of_bicycle(view)
 		:value => 'AND',
 		:children => [
 		  {:type => 'operator',
-		    :value => 'EQUALS',
+		    :value => 'CONTAINS',
 		    :children => [
 		      {:columnId =>  crime_type_id, :type => 'column'},
-		      {:type => 'literal', :value => 'THEFT OF BICYCLE'}
+		      {:type => 'literal', :value => 'BICYCLE'}
 		    ]
 		  },
 		  {:type => 'operator',

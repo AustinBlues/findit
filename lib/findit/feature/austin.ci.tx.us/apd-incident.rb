@@ -6,24 +6,18 @@ module FindIt
 
       class IncidentFactory
         
-        def self.create(db, type, options = {})
+        def self.create(db, crime_type, options = {})
           klass = Class.new(AbstractIncident)
+
           klass.instance_variable_set(:@db, db)
-          klass.instance_variable_set(:@type, type)
-          case type
+          klass.instance_variable_set(:@type, crime_type)
+          icon = options[:icon] || 'http://maps.google.com/mapfiles/kml/pal3/icon33.png'
+          marker = FindIt::Asset::MapMarker.new(icon,
+                                                :shadow => options[:shadow] || 'icon33s.png')
+          klass.instance_variable_set(:@marker, marker)
+          klass.instance_variable_set(:@title, options[:title] || crime_type)
+          klass.instance_variable_set(:@type, crime_type)
             
-          when 'THEFT OF BICYCLE'
-            klass.instance_variable_set(:@marker, FindIt::Asset::MapMarker.new(
-              'http://maps.google.com/mapfiles/kml/pal3/icon33.png',
-              :shadow => 'icon33s.png'))
-            klass.instance_variable_set(:@title, 'Closest bicycle thefts')
-            klass.instance_variable_set(:@rectype, type)
-            
-          else
-            raise "unknown incident type \"#{type}\""
-            
-          end
-          
           klass          
         end # initialize
         
@@ -33,7 +27,7 @@ module FindIt
       class AbstractIncident < FindIt::BaseFeature
         @db = nil
         @title = nil
-        @rectype = nil
+        @type = nil
                          
         def self.closest(origin)
           begin
@@ -45,7 +39,7 @@ module FindIt
             WHERE crime_type = ?
             ORDER BY distance ASC
             LIMIT 5
-            }, "POINT(#{origin.lng} #{origin.lat})", @rectype)
+            }, "POINT(#{origin.lng} #{origin.lat})", @type)
           rescue
             puts "EXCEPTION(#{__FILE__}: #{__LINE__}): #{$!.inspect}."
           end
