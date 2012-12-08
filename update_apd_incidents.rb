@@ -3,7 +3,7 @@ require 'socrata'
 require 'rdbi-driver-sqlite3'
 
 # How old data to use
-HORIZON = 30 * 24 * 60 * 60	# 30 days in seconds
+HORIZON = 365 * 24 * 60 * 60	# 365 days in seconds
 
 # Austin Police Dept (APD) Incident data URL and ID
 APD_INCIDENT = 'http://data.austintexas.gov/'
