@@ -54,21 +54,21 @@ module FindIt
 
       # List of classes that implement features (derived from FindIt::BaseFeature).
       @feature_classes = [
-        FacilityFactory.create(@db, :POST_OFFICE),
-        FacilityFactory.create(@db, :LIBRARY),
-        HistoricalFactory.create(@db, :MOON_TOWER),
-        FireStation, 
-        PoliceStation,
+                          FacilityFactory.create(@db, :POST_OFFICE),
+                          FacilityFactory.create(@db, :LIBRARY),
+                          HistoricalFactory.create(@db, :MOON_TOWER),
+                          FireStation, 
+                          PoliceStation,
 #        FindIt::Feature::Travis_CO_TX_US::VotingPlaceFactory.create(@db, "20120731"),
-	IncidentFactory.create(@db, 'THEFT OF BICYCLE',
+                          IncidentFactory.create(@db, 'THEFT OF BICYCLE',
                                :title => 'Bike theft',
                                :icon => 'http://maps.google.com/mapfiles/kml/pal3/icon41.png',
                                :shadow => 'icon41s.png'),
-	IncidentFactory.create(@db, 'AUTO-BICYCLE CRASH/COLLISION',
+                          IncidentFactory.create(@db, 'AUTO-BICYCLE CRASH/COLLISION',
                                :title => 'Bike-Car accident',
                                :icon => 'http://maps.google.com/mapfiles/kml/pal3/icon37.png',
                                :shadow => 'icon37s.png'),
-      ]  
+      ]
       
     end
     
