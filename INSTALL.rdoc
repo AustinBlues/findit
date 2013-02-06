@@ -15,13 +15,14 @@ To run the application, you will need to install the following packages:
 
 Download the source into ./CycleNearby with:
 
-  $ git clone -b SQLite3 https://github.com/AustinBlues/findit CycleNearby
+  $ git clone https://github.com/AustinBlues/findit CycleNearby
   $ cd CycleNearby
 
-You will need to locate the libspatilite shared library:
-libspatialite.so on Linux, libspatialite.dll on Windows.  Edit the
-following files and replace '/usr/lib64/libspatialite.so' with the
-correct path and shared library name.
+CycleNearby uses SQLite3 with the Spatialite GIS extensions.  You will
+need to locate the libspatilite shared library: libspatialite.so on
+Linux, libspatialite.dll on Windows.  Edit the following files and
+replace '/usr/lib64/libspatialite.so' with the correct path and shared
+library name.
 
 ./update_apd_incidents.rb:dbh.handle.load_extension('/usr/lib64/libspatialite.so')
 ./lib/findit/feature/rake-defs.rb:      DB.handle.load_extension('/usr/lib64/libspatialite.so')
@@ -115,6 +116,13 @@ create-database scripts.  Try commenting out the invocation of these
 scripts in 'ubuntu-config', launching a new instance, logging in via
 SSH, and running the scripts manually.  Contact me at
 jeff.taylor@ieee.org if you need help.
+
+== Production Deployment (Apache2)
+
+CycleNearby is a Rack application.  The Passenger Gem serves as glue
+logic between Apache and Rack or Rails applications.  Follow the
+installation directions for Rack based Ruby applications at
+http://www.modrails.com/documentation/Users%20guide%20Apache.html#_deploying_a_rack_based_ruby_application_including_rails_gt_3.
 
 == Contributors
 
