@@ -19,7 +19,7 @@ The "Cycle Nearby" package includes:
 * a RESTful web service
 * tools for acquiring and processing public datasets
 
-There is not yet any public host of the application.
+It currently is running at http://cycle.webatx.us/
 
 The source code is published at: https://github.com/AustinBlues/findit
 
