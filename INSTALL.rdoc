@@ -1,12 +1,12 @@
 = Installing the Cycle Nearby Application
 
-The Cycle Nearby application has been tested with Ruby 1.9.2 and
-Linux.  Ruby 1.9.1 is known not to work.  Other versions of Ruby and
-other operating systems have not been tested.
+The Cycle Nearby application has been tested with Linux and Ruby 1.9.2,
+1.9.3-p286, and 2.0.0-p0.  Ruby 1.9.1 is known not to work.  Other
+versions of Ruby and other operating systems have not been tested.
 
 To run the application, you will need to install the following packages:
 * Git
-* Ruby 1.9.2
+* Ruby 1.9.2 minimum
 * Rake
 * SQLite3
 * libspatialite
