@@ -1,7 +1,5 @@
 require 'rubygems'
-require 'bundler'
+require 'sinatra'
 
-Bundler.require
-
-require './cycle_nearby'
+load './bin/cycle_nearby.rb'
 run CycleNearby

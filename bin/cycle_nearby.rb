@@ -1,4 +1,6 @@
-BASEDIR = File.dirname(__FILE__)
+#!/usr/bin/env ruby
+#
+BASEDIR = File.dirname(__FILE__) + '/..'
 $:.insert(0, BASEDIR + '/lib')
 
 require 'sinatra'
