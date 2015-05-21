@@ -9,6 +9,8 @@ require 'findit/app'
 
 
 class CycleNearby < Sinatra::Base
+  set :root, File.dirname(__FILE__)
+
   @@findit = FindIt::App.new
 
   get '/' do

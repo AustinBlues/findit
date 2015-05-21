@@ -1,9 +1,8 @@
-source :gemcutter
-source 'http://gems.github.com'
+source 'https://rubygems.org'
 
 gem 'sinatra', :require => "sinatra/base"
 gem 'thin'
-gem 'rdbi-driver-sqlite3'
+gem 'sqlite3'
 gem 'json'
 
 # Socrata, the branch is required
