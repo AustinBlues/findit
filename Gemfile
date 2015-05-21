@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra', :require => "sinatra/base"
 gem 'thin'
-gem 'sqlite3'
+gem 'rdbi-driver-sqlite3'
 gem 'json'
 
 # Socrata, the branch is required
