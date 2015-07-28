@@ -1,5 +1,11 @@
 = Cycle Nearby
 
+I have abandoned work on this application.  If you want to take it
+over, e-mail me at jeff.taylor@ieee.org.  I have lost interest in
+keeping up with the torrent of updates in dependencies and programming
+in general.  It is no place for an old man.  My 43+ years programming
+is enough.  It's time to let the next generation run with it.
+
 The "Cycle Nearby" application identifies features of interest to
 cyclists in Austin, TX that are closest to you.  It is a fork of "Find
 It Nearby". The features it currently knows about are:
@@ -19,7 +25,7 @@ The "Cycle Nearby" package includes:
 * a RESTful web service
 * tools for acquiring and processing public datasets
 
-It currently is running at http://cycle.webatx.us/
+It currently is not running.
 
 The source code is published at: https://github.com/AustinBlues/findit
 
